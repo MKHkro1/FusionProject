@@ -12,44 +12,34 @@ namespace PotSmashingFix
     [HarmonyPatch]
     public class PotSmashingPatches
     {
-        private static readonly HashSet<ScaryPot> _hitPotsInFrame = new HashSet<ScaryPot>();
+        // 跟踪当前锤击事件中已经砸开的罐子
+        private static readonly HashSet<ScaryPot> _hitPotsInCurrentSwing = new HashSet<ScaryPot>();
+        // 跟踪当前锤击事件中已经处理的罐子（包括被阻止的）
+        private static readonly HashSet<ScaryPot> _processedPotsInCurrentSwing = new HashSet<ScaryPot>();
 
-        // 补丁 ScaryPot$$Hitted 方法，用于处理多个罐子重叠时只砸开第一个罐子
+        // 补丁 ScaryPot$$Hitted 方法，确保一次锤击只能敲爆一个罐子
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ScaryPot), nameof(ScaryPot.Hitted))]
         public static bool Prefix_ScaryPotHitted(ScaryPot __instance)
         {
-            if (_hitPotsInFrame.Contains(__instance))
+            // 检查当前罐子是否已经在当前锤击中被处理过
+            if (_processedPotsInCurrentSwing.Contains(__instance))
             {
                 return false; // 阻止原始方法执行
             }
 
-            Vector3 currentPotPosition = __instance.transform.position;
-
-            List<ScaryPot> overlappingPots = new List<ScaryPot>();
-            foreach (var plant in Board.Instance.plantArray)
+            // 检查是否已经有罐子在当前锤击中被砸开
+            if (_hitPotsInCurrentSwing.Count > 0)
             {
-                if (plant != null && plant.gameObject.activeInHierarchy && TypeMgr.IsPot(plant.thePlantType))
-                {
-                    var pot = plant.GetComponent<ScaryPot>();
-                    if (pot != null && IsPotsOverlapping(pot, __instance))
-                    {
-                        overlappingPots.Add(pot);
-                    }
-                }
-            }
-            overlappingPots = overlappingPots.OrderBy(pot => pot.GetInstanceID()).ToList();
-
-            if (overlappingPots.Count > 1)
-            {
-                ScaryPot firstPot = overlappingPots.First();
-                if (firstPot != __instance)
-                {
-                    return false; // 如果当前罐子不是第一个，则阻止其被砸开
-                }
+                // 已经有罐子被砸开，阻止当前罐子
+                _processedPotsInCurrentSwing.Add(__instance);
+                return false;
             }
 
-            _hitPotsInFrame.Add(__instance);
+            // 当前罐子可以被打砸，标记为已砸开和已处理
+            _hitPotsInCurrentSwing.Add(__instance);
+            _processedPotsInCurrentSwing.Add(__instance);
+            
             return true;
         }
 
@@ -216,12 +206,14 @@ namespace PotSmashingFix
             }
         }
 
-        // 在每帧结束时清除已处理的罐子列表
+        // 在每帧结束时重置锤击状态，为下一次锤击做准备
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Board), nameof(Board.Update))] // 假设Board.Update每帧执行
         public static void Postfix_BoardUpdate()
         {
-            _hitPotsInFrame.Clear();
+            // 清除当前锤击的状态，为下一次锤击做准备
+            _hitPotsInCurrentSwing.Clear();
+            _processedPotsInCurrentSwing.Clear();
         }
     }
 
@@ -609,6 +601,88 @@ namespace PotSmashingFix
             catch (Exception ex)
             {
                 UnityEngine.Debug.LogError($"PotSmashingFix: Jackbox_c.LoseHeadEvent 后置补丁执行失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 拦截 SuperJackboxZombie.DieEvent 方法，让超级小丑僵尸死亡时可以爆炸，但爆炸不影响罐子
+        /// </summary>
+        /// <param name="__instance">SuperJackboxZombie 实例</param>
+        /// <param name="reason">死亡原因</param>
+        /// <returns>是否允许执行原方法</returns>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(SuperJackboxZombie), nameof(SuperJackboxZombie.DieEvent))]
+        public static bool Prefix_SuperJackboxZombieDieEvent(SuperJackboxZombie __instance, int reason)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = true;
+                return true; // 允许超级小丑僵尸正常死亡爆炸
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: SuperJackboxZombie.DieEvent 补丁执行失败: {ex.Message}");
+                return true; // 出错时允许正常执行
+            }
+        }
+
+        /// <summary>
+        /// 拦截 SuperJackboxZombie.DieEvent 方法的后置处理
+        /// </summary>
+        /// <param name="__instance">SuperJackboxZombie 实例</param>
+        /// <param name="reason">死亡原因</param>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(SuperJackboxZombie), nameof(SuperJackboxZombie.DieEvent))]
+        public static void Postfix_SuperJackboxZombieDieEvent(SuperJackboxZombie __instance, int reason)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: SuperJackboxZombie.DieEvent 后置补丁执行失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 拦截 UltimateJackboxZombie.DieEvent 方法，让终极小丑跳跳王死亡时可以爆炸，但爆炸不影响罐子
+        /// </summary>
+        /// <param name="__instance">UltimateJackboxZombie 实例</param>
+        /// <param name="reason">死亡原因</param>
+        /// <returns>是否允许执行原方法</returns>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(UltimateJackboxZombie), nameof(UltimateJackboxZombie.DieEvent))]
+        public static bool Prefix_UltimateJackboxZombieDieEvent(UltimateJackboxZombie __instance, int reason)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = true;
+                return true; // 允许终极小丑跳跳王正常死亡爆炸
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: UltimateJackboxZombie.DieEvent 补丁执行失败: {ex.Message}");
+                return true; // 出错时允许正常执行
+            }
+        }
+
+        /// <summary>
+        /// 拦截 UltimateJackboxZombie.DieEvent 方法的后置处理
+        /// </summary>
+        /// <param name="__instance">UltimateJackboxZombie 实例</param>
+        /// <param name="reason">死亡原因</param>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(UltimateJackboxZombie), nameof(UltimateJackboxZombie.DieEvent))]
+        public static void Postfix_UltimateJackboxZombieDieEvent(UltimateJackboxZombie __instance, int reason)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: UltimateJackboxZombie.DieEvent 后置补丁执行失败: {ex.Message}");
             }
         }
 
