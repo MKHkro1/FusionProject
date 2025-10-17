@@ -455,6 +455,164 @@ namespace PotSmashingFix
         }
 
         /// <summary>
+        /// 拦截 UltimateJackboxZombie.AnimPop 方法，让终极小丑跳跳王可以爆炸，但爆炸不影响罐子
+        /// </summary>
+        /// <param name="__instance">UltimateJackboxZombie 实例</param>
+        /// <returns>是否允许执行原方法</returns>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(UltimateJackboxZombie), nameof(UltimateJackboxZombie.AnimPop))]
+        public static bool Prefix_UltimateJackboxZombieAnimPop(UltimateJackboxZombie __instance)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = true;
+                return true; // 允许终极小丑跳跳王正常爆炸
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: UltimateJackboxZombie.AnimPop 补丁执行失败: {ex.Message}");
+                return true; // 出错时允许正常执行
+            }
+        }
+
+        /// <summary>
+        /// 拦截 UltimateJackboxZombie.AnimPop 方法的后置处理
+        /// </summary>
+        /// <param name="__instance">UltimateJackboxZombie 实例</param>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(UltimateJackboxZombie), nameof(UltimateJackboxZombie.AnimPop))]
+        public static void Postfix_UltimateJackboxZombieAnimPop(UltimateJackboxZombie __instance)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: UltimateJackboxZombie.AnimPop 后置补丁执行失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 拦截 JackboxJumpZombie.DieEvent 方法，让小丑跳跳僵尸可以爆炸，但爆炸不影响罐子
+        /// </summary>
+        /// <param name="__instance">JackboxJumpZombie 实例</param>
+        /// <param name="reason">死亡原因</param>
+        /// <returns>是否允许执行原方法</returns>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(JackboxJumpZombie), nameof(JackboxJumpZombie.DieEvent))]
+        public static bool Prefix_JackboxJumpZombieDieEvent(JackboxJumpZombie __instance, int reason)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = true;
+                return true; // 允许小丑跳跳僵尸正常死亡爆炸
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: JackboxJumpZombie.DieEvent 补丁执行失败: {ex.Message}");
+                return true; // 出错时允许正常执行
+            }
+        }
+
+        /// <summary>
+        /// 拦截 JackboxJumpZombie.DieEvent 方法的后置处理
+        /// </summary>
+        /// <param name="__instance">JackboxJumpZombie 实例</param>
+        /// <param name="reason">死亡原因</param>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(JackboxJumpZombie), nameof(JackboxJumpZombie.DieEvent))]
+        public static void Postfix_JackboxJumpZombieDieEvent(JackboxJumpZombie __instance, int reason)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: JackboxJumpZombie.DieEvent 后置补丁执行失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 拦截 Jackbox_a.LoseHeadEvent 方法，让一级小丑跳跳可以爆炸，但爆炸不影响罐子
+        /// </summary>
+        /// <param name="__instance">Jackbox_a 实例</param>
+        /// <returns>是否允许执行原方法</returns>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Jackbox_a), nameof(Jackbox_a.LoseHeadEvent))]
+        public static bool Prefix_Jackbox_aLoseHeadEvent(Jackbox_a __instance)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = true;
+                return true; // 允许一级小丑跳跳正常爆炸
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: Jackbox_a.LoseHeadEvent 补丁执行失败: {ex.Message}");
+                return true; // 出错时允许正常执行
+            }
+        }
+
+        /// <summary>
+        /// 拦截 Jackbox_a.LoseHeadEvent 方法的后置处理
+        /// </summary>
+        /// <param name="__instance">Jackbox_a 实例</param>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Jackbox_a), nameof(Jackbox_a.LoseHeadEvent))]
+        public static void Postfix_Jackbox_aLoseHeadEvent(Jackbox_a __instance)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: Jackbox_a.LoseHeadEvent 后置补丁执行失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 拦截 Jackbox_c.LoseHeadEvent 方法，让三级小丑跳跳可以爆炸，但爆炸不影响罐子
+        /// </summary>
+        /// <param name="__instance">Jackbox_c 实例</param>
+        /// <returns>是否允许执行原方法</returns>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Jackbox_c), nameof(Jackbox_c.LoseHeadEvent))]
+        public static bool Prefix_Jackbox_cLoseHeadEvent(Jackbox_c __instance)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = true;
+                return true; // 允许三级小丑跳跳正常爆炸
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: Jackbox_c.LoseHeadEvent 补丁执行失败: {ex.Message}");
+                return true; // 出错时允许正常执行
+            }
+        }
+
+        /// <summary>
+        /// 拦截 Jackbox_c.LoseHeadEvent 方法的后置处理
+        /// </summary>
+        /// <param name="__instance">Jackbox_c 实例</param>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Jackbox_c), nameof(Jackbox_c.LoseHeadEvent))]
+        public static void Postfix_Jackbox_cLoseHeadEvent(Jackbox_c __instance)
+        {
+            try
+            {
+                _isProcessingJackboxExplosion = false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"PotSmashingFix: Jackbox_c.LoseHeadEvent 后置补丁执行失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// 检查是否正在处理小丑爆炸
         /// </summary>
         /// <returns>是否正在处理小丑爆炸</returns>
