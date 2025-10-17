@@ -300,7 +300,7 @@ namespace PotSmashingFix
                     // 检查附近是否有罐子
                     var colliders = UnityEngine.Physics2D.OverlapCircleAll(
                         gargantuar.transform.position, 
-                        1.0f); // 1格范围内的碰撞体
+                        5.0f); // 5格范围内的碰撞体
 
                     foreach (var collider in colliders)
                     {
