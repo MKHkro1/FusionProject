@@ -16,12 +16,32 @@ namespace PotSmashingFix
         private static readonly HashSet<ScaryPot> _hitPotsInCurrentSwing = new HashSet<ScaryPot>();
         // 跟踪当前锤击事件中已经处理的罐子（包括被阻止的）
         private static readonly HashSet<ScaryPot> _processedPotsInCurrentSwing = new HashSet<ScaryPot>();
+        // 跟踪通过ScaryPot.Hitted调用的罐子
+        private static readonly HashSet<ScaryPot> _hittedPots = new HashSet<ScaryPot>();
 
         // 补丁 ScaryPot$$Hitted 方法，确保一次锤击只能敲爆一个罐子
         [HarmonyPrefix]
         [HarmonyPatch(typeof(ScaryPot), nameof(ScaryPot.Hitted))]
         public static bool Prefix_ScaryPotHitted(ScaryPot __instance)
         {
+            // 记录所有调用栈信息用于调试
+            UnityEngine.Debug.Log($"PotSmashingFix: ScaryPot.Hitted 被调用，开始分析调用栈...");
+            LogStackTrace();
+
+            // 通用检测：检查调用栈中是否包含任何与ProjectileZombie、Submarine相关的内容
+            if (IsAnyProjectileZombieRelatedInStack())
+            {
+                UnityEngine.Debug.Log($"PotSmashingFix: 阻止ProjectileZombie攻击破坏罐子 - 调用栈检测");
+                return false; // 阻止ProjectileZombie攻击破坏罐子
+            }
+
+            // 检查是否为ProjectileZombie攻击（导弹机械舰艇和雷鸣机械潜艇的雷鸣炮弹）
+            if (IsProjectileZombieAttackInStack() || IsBombingAttack() || IsAnyProjectileZombieRelatedAttack())
+            {
+                UnityEngine.Debug.Log($"PotSmashingFix: 阻止ProjectileZombie攻击破坏罐子 - 专门检测");
+                return false; // 阻止ProjectileZombie攻击破坏罐子
+            }
+
             // 检查当前罐子是否已经在当前锤击中被处理过
             if (_processedPotsInCurrentSwing.Contains(__instance))
             {
@@ -40,6 +60,9 @@ namespace PotSmashingFix
             _hitPotsInCurrentSwing.Add(__instance);
             _processedPotsInCurrentSwing.Add(__instance);
             
+            // 标记这个罐子是通过Hitted调用的，允许后续的OnHitted调用
+            _hittedPots.Add(__instance);
+            
             return true;
         }
 
@@ -54,25 +77,29 @@ namespace PotSmashingFix
         {
             try
             {
-                // 检查是否为特殊攻击（小丑爆炸、巨人砸击等）
-                if (IsSpecialAttack())
-                {
-                    return false; // 阻止特殊攻击破坏罐子
-                }
-
-                // 额外检查：直接检查调用栈中是否有小丑爆炸相关的方法
-                if (IsJackboxExplosionInStack())
-                {
-                    return false; // 阻止小丑爆炸破坏罐子
-                }
+                // 记录所有调用栈信息用于调试
+                UnityEngine.Debug.Log($"PotSmashingFix: ScaryPot.OnHitted 被调用，开始分析调用栈...");
+                LogStackTrace();
 
                 // 检查是否正在处理小丑爆炸
                 if (JackboxZombieProtectionPatches.IsProcessingJackboxExplosion())
                 {
+                    UnityEngine.Debug.Log($"PotSmashingFix: 阻止小丑爆炸破坏罐子 - OnHitted");
                     return false; // 阻止小丑爆炸破坏罐子
                 }
 
-                return true; // 允许正常攻击破坏
+                // 检查是否是通过ScaryPot.Hitted调用的（允许鼠标点击路径）
+                if (_hittedPots.Contains(__instance))
+                {
+                    UnityEngine.Debug.Log($"PotSmashingFix: 允许通过ScaryPot.Hitted调用的OnHitted攻击破坏罐子");
+                    // 清除标志，避免重复使用
+                    _hittedPots.Remove(__instance);
+                    return true; // 允许通过Hitted调用的OnHitted攻击
+                }
+
+                // 阻止所有直接调用OnHitted的攻击
+                UnityEngine.Debug.Log($"PotSmashingFix: 阻止直接调用OnHitted的攻击破坏罐子 - 安全保护");
+                return false; // 阻止所有直接调用OnHitted的攻击
             }
             catch (Exception ex)
             {
@@ -134,6 +161,370 @@ namespace PotSmashingFix
             {
                 UnityEngine.Debug.LogWarning($"PotSmashingFix: 检查小丑爆炸调用栈时出错: {ex.Message}");
                 return false; // 出错时默认没有小丑爆炸
+            }
+        }
+
+        /// <summary>
+        /// 检查调用栈中是否有ProjectileZombie相关的方法
+        /// </summary>
+        /// <returns>是否有ProjectileZombie攻击</returns>
+        private static bool IsProjectileZombieAttackInStack()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                
+                // 检查调用栈中是否包含ProjectileZombie相关的方法
+                for (int i = 0; i < stackTrace.FrameCount; i++)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "";
+                    var className = method?.DeclaringType?.Name ?? "";
+
+                    // 跳过我们自己的方法
+                    if (className.Contains("PotSmashingPatches"))
+                    {
+                        continue;
+                    }
+
+                    // 检查是否为ProjectileZombie相关
+                    if (className.Contains("ProjectileZombie") || 
+                        (className.Contains("Bullet") && methodName.Contains("OnTriggerEnter2D")) ||
+                        (className.Contains("Submarine_b") || className.Contains("Submarine_c")))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 检查ProjectileZombie攻击调用栈时出错: {ex.Message}");
+                return false; // 出错时默认没有ProjectileZombie攻击
+            }
+        }
+
+        /// <summary>
+        /// 检查是否为轰炸/物理爆炸类型的攻击
+        /// </summary>
+        /// <returns>是否为轰炸攻击</returns>
+        private static bool IsBombingAttack()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                
+                // 检查调用栈中是否包含轰炸相关的方法
+                for (int i = 0; i < stackTrace.FrameCount; i++)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "";
+                    var className = method?.DeclaringType?.Name ?? "";
+
+                    // 跳过我们自己的方法
+                    if (className.Contains("PotSmashingPatches"))
+                    {
+                        continue;
+                    }
+
+                    // 检查是否为轰炸/物理爆炸相关
+                    if ((methodName.Contains("Explode") || methodName.Contains("Bomb") || methodName.Contains("HitLand") || methodName.Contains("HitZombie")) && 
+                        (className.Contains("Bullet") || className.Contains("ProjectileZombie") || className.Contains("Submarine")))
+                    {
+                        return true;
+                    }
+
+                    // 检查是否为ProjectileZombie的特定攻击
+                    if (className.Contains("ProjectileZombie") && 
+                        (methodName.Contains("Update") || methodName.Contains("FixedUpdate") || methodName.Contains("RbUpdate")))
+                    {
+                        return true;
+                    }
+
+                    // 检查是否为Submarine相关的攻击
+                    if ((className.Contains("Submarine_b") || className.Contains("Submarine_c")) && 
+                        (methodName.Contains("AnimShoot") || methodName.Contains("SetBullet")))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 检查轰炸攻击调用栈时出错: {ex.Message}");
+                return false; // 出错时默认不是轰炸攻击
+            }
+        }
+
+        /// <summary>
+        /// 检查调用栈中是否有任何与ProjectileZombie相关的攻击
+        /// </summary>
+        /// <returns>是否有ProjectileZombie相关攻击</returns>
+        private static bool IsAnyProjectileZombieRelatedAttack()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                
+                // 检查调用栈中是否包含任何与ProjectileZombie相关的方法
+                for (int i = 0; i < stackTrace.FrameCount; i++)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "";
+                    var className = method?.DeclaringType?.Name ?? "";
+
+                    // 跳过我们自己的方法
+                    if (className.Contains("PotSmashingPatches"))
+                    {
+                        continue;
+                    }
+
+                    // 检查是否为ProjectileZombie相关（更宽泛的检测）
+                    if (className.Contains("ProjectileZombie") || 
+                        className.Contains("Submarine_b") || 
+                        className.Contains("Submarine_c") ||
+                        (className.Contains("Bullet") && (methodName.Contains("OnTriggerEnter2D") || methodName.Contains("HitLand") || methodName.Contains("HitZombie"))) ||
+                        (methodName.Contains("SetBullet") && (className.Contains("Submarine") || className.Contains("ProjectileZombie"))))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 检查ProjectileZombie相关攻击调用栈时出错: {ex.Message}");
+                return false; // 出错时默认没有ProjectileZombie相关攻击
+            }
+        }
+
+        /// <summary>
+        /// 记录调用栈信息用于调试
+        /// </summary>
+        private static void LogStackTrace()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace(true);
+                
+                UnityEngine.Debug.Log($"PotSmashingFix: 调用栈信息 (共{stackTrace.FrameCount}层):");
+                
+                // 记录调用栈中的每一层
+                for (int i = 0; i < Math.Min(stackTrace.FrameCount, 15); i++) // 记录前15层
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "Unknown";
+                    var className = method?.DeclaringType?.Name ?? "Unknown";
+                    var fileName = frame?.GetFileName() ?? "Unknown";
+                    var lineNumber = frame?.GetFileLineNumber() ?? 0;
+                    
+                    UnityEngine.Debug.Log($"  [{i}] {className}.{methodName} (文件: {fileName}, 行: {lineNumber})");
+                    
+                    // 特别检查是否包含ProjectileZombie相关的内容
+                    if (className.Contains("ProjectileZombie") || 
+                        className.Contains("Submarine") ||
+                        methodName.Contains("ProjectileZombie") ||
+                        methodName.Contains("Submarine") ||
+                        methodName.Contains("SetBullet") ||
+                        methodName.Contains("AnimShoot"))
+                    {
+                        UnityEngine.Debug.Log($"    *** 发现ProjectileZombie相关内容: {className}.{methodName} ***");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 记录调用栈时出错: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 通用检测：检查调用栈中是否包含任何与ProjectileZombie、Submarine相关的内容
+        /// </summary>
+        /// <returns>是否有ProjectileZombie相关攻击</returns>
+        private static bool IsAnyProjectileZombieRelatedInStack()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                
+                // 检查调用栈中是否包含任何与ProjectileZombie、Submarine相关的内容
+                for (int i = 0; i < stackTrace.FrameCount; i++)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "";
+                    var className = method?.DeclaringType?.Name ?? "";
+
+                    // 跳过我们自己的方法
+                    if (className.Contains("PotSmashingPatches"))
+                    {
+                        continue;
+                    }
+
+                    // 通用检测：任何包含ProjectileZombie、Submarine、SetBullet、AnimShoot的内容
+                    if (className.Contains("ProjectileZombie") || 
+                        className.Contains("Submarine") ||
+                        methodName.Contains("SetBullet") ||
+                        methodName.Contains("AnimShoot") ||
+                        methodName.Contains("ProjectileZombie"))
+                    {
+                        UnityEngine.Debug.Log($"PotSmashingFix: 检测到ProjectileZombie相关攻击 - 类名: {className}, 方法名: {methodName}");
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 通用检测ProjectileZombie相关攻击时出错: {ex.Message}");
+                return false; // 出错时默认没有ProjectileZombie相关攻击
+            }
+        }
+
+        /// <summary>
+        /// 检查是否为鼠标点击攻击（正常砸罐子）
+        /// </summary>
+        /// <returns>是否为鼠标点击攻击</returns>
+        private static bool IsMouseClickAttack()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                
+                // 检查调用栈中是否包含鼠标相关的方法
+                for (int i = 0; i < stackTrace.FrameCount; i++)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "";
+                    var className = method?.DeclaringType?.Name ?? "";
+
+                    // 跳过我们自己的方法
+                    if (className.Contains("PotSmashingPatches"))
+                    {
+                        continue;
+                    }
+
+                    // 检查是否包含鼠标相关的方法
+                    if (className.Contains("Mouse") || 
+                        methodName.Contains("Mouse") ||
+                        methodName.Contains("Click") ||
+                        methodName.Contains("LeftClick"))
+                    {
+                        UnityEngine.Debug.Log($"PotSmashingFix: 检测到鼠标点击攻击 - 类名: {className}, 方法名: {methodName}");
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 检测鼠标点击攻击时出错: {ex.Message}");
+                return false; // 出错时默认不是鼠标点击攻击
+            }
+        }
+
+        /// <summary>
+        /// 检查OnHitted调用栈中是否有鼠标点击相关的方法
+        /// </summary>
+        /// <returns>是否为鼠标点击的OnHitted</returns>
+        private static bool IsMouseClickInOnHittedStack()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                
+                // 检查调用栈中是否包含鼠标相关的方法
+                for (int i = 0; i < stackTrace.FrameCount; i++)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "";
+                    var className = method?.DeclaringType?.Name ?? "";
+
+                    // 跳过我们自己的方法
+                    if (className.Contains("PotSmashingPatches"))
+                    {
+                        continue;
+                    }
+
+                    // 检查是否包含鼠标相关的方法
+                    if (className.Contains("Mouse") || 
+                        methodName.Contains("Mouse") ||
+                        methodName.Contains("Click") ||
+                        methodName.Contains("LeftClick"))
+                    {
+                        UnityEngine.Debug.Log($"PotSmashingFix: 检测到鼠标点击的OnHitted - 类名: {className}, 方法名: {methodName}");
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 检测鼠标点击OnHitted时出错: {ex.Message}");
+                return false; // 出错时默认不是鼠标点击
+            }
+        }
+
+        /// <summary>
+        /// 检查OnHitted是否是通过ScaryPot.Hitted调用的
+        /// </summary>
+        /// <returns>是否通过ScaryPot.Hitted调用</returns>
+        private static bool IsCalledFromScaryPotHitted()
+        {
+            try
+            {
+                // 获取当前调用栈
+                System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                
+                // 检查调用栈中是否包含ScaryPot.Hitted
+                for (int i = 0; i < stackTrace.FrameCount; i++)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var method = frame?.GetMethod();
+                    var methodName = method?.Name ?? "";
+                    var className = method?.DeclaringType?.Name ?? "";
+
+                    // 跳过我们自己的方法
+                    if (className.Contains("PotSmashingPatches"))
+                    {
+                        continue;
+                    }
+
+                    // 检查是否包含ScaryPot.Hitted
+                    if (className.Contains("ScaryPot") && methodName.Contains("Hitted"))
+                    {
+                        UnityEngine.Debug.Log($"PotSmashingFix: 检测到通过ScaryPot.Hitted调用的OnHitted - 类名: {className}, 方法名: {methodName}");
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"PotSmashingFix: 检测ScaryPot.Hitted调用时出错: {ex.Message}");
+                return false; // 出错时默认不是通过Hitted调用
             }
         }
 
@@ -695,4 +1086,5 @@ namespace PotSmashingFix
             return _isProcessingJackboxExplosion;
         }
     }
+
 }
