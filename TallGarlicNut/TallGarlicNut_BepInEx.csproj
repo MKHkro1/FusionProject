@@ -1,0 +1,81 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Lib.Harmony" Version="2.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="tallgarlicnut">
+            <LogicalName>TallGarlicNut_BepInEx.tallgarlicnut</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="0Harmony">
+            <HintPath>libs\0Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>libs\Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="BepInEx.Core">
+            <HintPath>libs\BepInEx.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="BepInEx.Unity.IL2CPP">
+            <HintPath>libs\BepInEx.Unity.IL2CPP.dll</HintPath>
+        </Reference>
+        <Reference Include="CustomizeLib.BepInEx">
+            <HintPath>libs\CustomizeLib.BepInEx.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppInterop.Runtime">
+            <HintPath>libs\Il2CppInterop.Runtime.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppInterop.Runtime.Injection">
+            <HintPath>libs\Il2CppInterop.Runtime.Injection.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2Cppmscorlib">
+            <HintPath>libs\Il2Cppmscorlib.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppSystem">
+            <HintPath>libs\Il2CppSystem.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2CppSystem.Core">
+            <HintPath>libs\Il2CppSystem.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2Cpp__Generated">
+            <HintPath>libs\Il2Cpp__Generated.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <HintPath>libs\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>libs\UnityEngine.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+            <HintPath>libs\UnityEngine.AssetBundleModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>libs\UnityEngine.IMGUIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.Physics2DModule">
+            <HintPath>libs\UnityEngine.Physics2DModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+            <HintPath>libs\UnityEngine.UIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="__Generated">
+            <HintPath>libs\__Generated.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+</Project>
