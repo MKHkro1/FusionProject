@@ -1,0 +1,360 @@
+<Project>
+  <PropertyGroup Condition="'$(PVZLibsDir)' == ''">
+    <PVZLibsDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\插件项目Code\libs插件依赖\'))</PVZLibsDir>
+  </PropertyGroup>
+
+  <ItemGroup Condition="Exists('$(PVZLibsDir)')">
+    <Reference Update="0Harmony">
+      <HintPath>$(PVZLibsDir)0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Update="AsmResolver">
+      <HintPath>$(PVZLibsDir)AsmResolver.dll</HintPath>
+    </Reference>
+    <Reference Update="AsmResolver.DotNet">
+      <HintPath>$(PVZLibsDir)AsmResolver.DotNet.dll</HintPath>
+    </Reference>
+    <Reference Update="AsmResolver.PE">
+      <HintPath>$(PVZLibsDir)AsmResolver.PE.dll</HintPath>
+    </Reference>
+    <Reference Update="AsmResolver.PE.File">
+      <HintPath>$(PVZLibsDir)AsmResolver.PE.File.dll</HintPath>
+    </Reference>
+    <Reference Update="Assembly-CSharp">
+      <HintPath>$(PVZLibsDir)Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Update="AssetRipper.CIL">
+      <HintPath>$(PVZLibsDir)AssetRipper.CIL.dll</HintPath>
+    </Reference>
+    <Reference Update="AssetRipper.Primitives">
+      <HintPath>$(PVZLibsDir)AssetRipper.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Update="AssetRipper.VersionUtilities">
+      <HintPath>$(PVZLibsDir)AssetRipper.VersionUtilities.dll</HintPath>
+    </Reference>
+    <Reference Update="BepInEx.Core">
+      <HintPath>$(PVZLibsDir)BepInEx.Core.dll</HintPath>
+    </Reference>
+    <Reference Update="BepInEx.Preloader.Core">
+      <HintPath>$(PVZLibsDir)BepInEx.Preloader.Core.dll</HintPath>
+    </Reference>
+    <Reference Update="BepInEx.Unity.Common">
+      <HintPath>$(PVZLibsDir)BepInEx.Unity.Common.dll</HintPath>
+    </Reference>
+    <Reference Update="BepInEx.Unity.IL2CPP">
+      <HintPath>$(PVZLibsDir)BepInEx.Unity.IL2CPP.dll</HintPath>
+    </Reference>
+    <Reference Update="Cpp2IL.Core">
+      <HintPath>$(PVZLibsDir)Cpp2IL.Core.dll</HintPath>
+    </Reference>
+    <Reference Update="Disarm">
+      <HintPath>$(PVZLibsDir)Disarm.dll</HintPath>
+    </Reference>
+    <Reference Update="Gee.External.Capstone">
+      <HintPath>$(PVZLibsDir)Gee.External.Capstone.dll</HintPath>
+    </Reference>
+    <Reference Update="Iced">
+      <HintPath>$(PVZLibsDir)Iced.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppInterop.Common">
+      <HintPath>$(PVZLibsDir)Il2CppInterop.Common.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppInterop.Generator">
+      <HintPath>$(PVZLibsDir)Il2CppInterop.Generator.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppInterop.HarmonySupport">
+      <HintPath>$(PVZLibsDir)Il2CppInterop.HarmonySupport.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppInterop.Runtime">
+      <HintPath>$(PVZLibsDir)Il2CppInterop.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppMono.Security">
+      <HintPath>$(PVZLibsDir)Il2CppMono.Security.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2Cppmscorlib">
+      <HintPath>$(PVZLibsDir)Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppSystem">
+      <HintPath>$(PVZLibsDir)Il2CppSystem.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppSystem.Configuration">
+      <HintPath>$(PVZLibsDir)Il2CppSystem.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppSystem.Core">
+      <HintPath>$(PVZLibsDir)Il2CppSystem.Core.dll</HintPath>
+    </Reference>
+    <Reference Update="Il2CppSystem.Xml">
+      <HintPath>$(PVZLibsDir)Il2CppSystem.Xml.dll</HintPath>
+    </Reference>
+    <Reference Update="LibCpp2IL">
+      <HintPath>$(PVZLibsDir)LibCpp2IL.dll</HintPath>
+    </Reference>
+    <Reference Update="Mono.Cecil">
+      <HintPath>$(PVZLibsDir)Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Update="Mono.Cecil.Mdb">
+      <HintPath>$(PVZLibsDir)Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Update="Mono.Cecil.Pdb">
+      <HintPath>$(PVZLibsDir)Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Update="Mono.Cecil.Rocks">
+      <HintPath>$(PVZLibsDir)Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Update="MonoMod.RuntimeDetour">
+      <HintPath>$(PVZLibsDir)MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Update="MonoMod.Utils">
+      <HintPath>$(PVZLibsDir)MonoMod.Utils.dll</HintPath>
+    </Reference>
+    <Reference Update="SemanticVersioning">
+      <HintPath>$(PVZLibsDir)SemanticVersioning.dll</HintPath>
+    </Reference>
+    <Reference Update="StableNameDotNet">
+      <HintPath>$(PVZLibsDir)StableNameDotNet.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.2D.Animation.Runtime">
+      <HintPath>$(PVZLibsDir)Unity.2D.Animation.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.Burst">
+      <HintPath>$(PVZLibsDir)Unity.Burst.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.Burst.Unsafe">
+      <HintPath>$(PVZLibsDir)Unity.Burst.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.Collections">
+      <HintPath>$(PVZLibsDir)Unity.Collections.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.Collections.LowLevel.ILSupport">
+      <HintPath>$(PVZLibsDir)Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.InternalAPIEngineBridge.001">
+      <HintPath>$(PVZLibsDir)Unity.InternalAPIEngineBridge.001.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.Mathematics">
+      <HintPath>$(PVZLibsDir)Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.RenderPipeline.Universal.ShaderLibrary">
+      <HintPath>$(PVZLibsDir)Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>$(PVZLibsDir)Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>$(PVZLibsDir)Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.TextMeshPro">
+      <HintPath>$(PVZLibsDir)Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Update="Unity.VisualScripting.Core">
+      <HintPath>$(PVZLibsDir)Unity.VisualScripting.Core.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine">
+      <HintPath>$(PVZLibsDir)UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.AccessibilityModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.AIModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.AndroidJNIModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.AnimationModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.AssetBundleModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.AudioModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ClothModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ClusterInputModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ClusterRendererModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ClusterRendererModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ContentLoadModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ContentLoadModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.CoreModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.CrashReportingModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.DirectorModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.DSPGraphModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.DSPGraphModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.GameCenterModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.GIModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.GIModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.GridModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.HotReloadModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ImageConversionModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.IMGUIModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.InputLegacyModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.InputModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.JSONSerializeModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.LocalizationModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ParticleSystemModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.PerformanceReportingModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.Physics2DModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.PhysicsModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ProfilerModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ProfilerModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.PropertiesModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.PropertiesModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.ScreenCaptureModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.SharedInternalsModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.SpriteMaskModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.SpriteShapeModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.StreamingModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.SubstanceModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.SubsystemsModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.TerrainModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.TerrainPhysicsModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.TextRenderingModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.TilemapModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.TLSModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UI">
+      <HintPath>$(PVZLibsDir)UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UIElementsModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UIModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UmbraModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityAnalyticsCommonModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityAnalyticsModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityConnectModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityCurlModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityCurlModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityTestProtocolModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityWebRequestModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.VehiclesModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.VFXModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.VideoModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.VirtualTexturingModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.VirtualTexturingModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.VRModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.WindModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Update="UnityEngine.XRModule">
+      <HintPath>$(PVZLibsDir)UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Update="WasmDisassembler">
+      <HintPath>$(PVZLibsDir)WasmDisassembler.dll</HintPath>
+    </Reference>
+    <Reference Update="__Generated">
+      <HintPath>$(PVZLibsDir)__Generated.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
+

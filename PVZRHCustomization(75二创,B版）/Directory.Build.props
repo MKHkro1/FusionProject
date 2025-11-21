@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <PVZLibsDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\插件项目Code\libs插件依赖\'))</PVZLibsDir>
+  </PropertyGroup>
+</Project>
+
