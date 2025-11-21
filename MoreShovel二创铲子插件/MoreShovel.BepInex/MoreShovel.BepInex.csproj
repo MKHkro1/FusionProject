@@ -1,0 +1,380 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="0Harmony">
+        <HintPath>..\..\插件项目Code\libs插件依赖\0Harmony.dll</HintPath>
+      </Reference>
+      <Reference Include="AsmResolver">
+        <HintPath>..\..\插件项目Code\libs插件依赖\AsmResolver.dll</HintPath>
+      </Reference>
+      <Reference Include="AsmResolver.DotNet">
+        <HintPath>..\..\插件项目Code\libs插件依赖\AsmResolver.DotNet.dll</HintPath>
+      </Reference>
+      <Reference Include="AsmResolver.PE">
+        <HintPath>..\..\插件项目Code\libs插件依赖\AsmResolver.PE.dll</HintPath>
+      </Reference>
+      <Reference Include="AsmResolver.PE.File">
+        <HintPath>..\..\插件项目Code\libs插件依赖\AsmResolver.PE.File.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="AssetRipper.CIL">
+        <HintPath>..\..\插件项目Code\libs插件依赖\AssetRipper.CIL.dll</HintPath>
+      </Reference>
+      <Reference Include="AssetRipper.Primitives">
+        <HintPath>..\..\插件项目Code\libs插件依赖\AssetRipper.Primitives.dll</HintPath>
+      </Reference>
+      <Reference Include="AssetRipper.VersionUtilities">
+        <HintPath>..\..\插件项目Code\libs插件依赖\AssetRipper.VersionUtilities.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx.Core">
+        <HintPath>..\..\插件项目Code\libs插件依赖\BepInEx.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx.Preloader.Core">
+        <HintPath>..\..\插件项目Code\libs插件依赖\BepInEx.Preloader.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx.Unity.Common">
+        <HintPath>..\..\插件项目Code\libs插件依赖\BepInEx.Unity.Common.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx.Unity.IL2CPP">
+        <HintPath>..\..\插件项目Code\libs插件依赖\BepInEx.Unity.IL2CPP.dll</HintPath>
+      </Reference>
+      <Reference Include="Cpp2IL.Core">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Cpp2IL.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Disarm">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Disarm.dll</HintPath>
+      </Reference>
+      <Reference Include="Gee.External.Capstone">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Gee.External.Capstone.dll</HintPath>
+      </Reference>
+      <Reference Include="Iced">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Iced.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppInterop.Common">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppInterop.Common.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppInterop.Generator">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppInterop.Generator.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppInterop.HarmonySupport">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppInterop.HarmonySupport.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppInterop.Runtime">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppInterop.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppMono.Security">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppMono.Security.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2Cppmscorlib">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2Cppmscorlib.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppSystem.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Configuration">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppSystem.Configuration.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Core">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppSystem.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Xml">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Il2CppSystem.Xml.dll</HintPath>
+      </Reference>
+      <Reference Include="LibCpp2IL">
+        <HintPath>..\..\插件项目Code\libs插件依赖\LibCpp2IL.dll</HintPath>
+      </Reference>
+      <Reference Include="Mono.Cecil">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Mono.Cecil.dll</HintPath>
+      </Reference>
+      <Reference Include="Mono.Cecil.Mdb">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Mono.Cecil.Mdb.dll</HintPath>
+      </Reference>
+      <Reference Include="Mono.Cecil.Pdb">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Mono.Cecil.Pdb.dll</HintPath>
+      </Reference>
+      <Reference Include="Mono.Cecil.Rocks">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Mono.Cecil.Rocks.dll</HintPath>
+      </Reference>
+      <Reference Include="MonoMod.RuntimeDetour">
+        <HintPath>..\..\插件项目Code\libs插件依赖\MonoMod.RuntimeDetour.dll</HintPath>
+      </Reference>
+      <Reference Include="MonoMod.Utils">
+        <HintPath>..\..\插件项目Code\libs插件依赖\MonoMod.Utils.dll</HintPath>
+      </Reference>
+      <Reference Include="SemanticVersioning">
+        <HintPath>..\..\插件项目Code\libs插件依赖\SemanticVersioning.dll</HintPath>
+      </Reference>
+      <Reference Include="StableNameDotNet">
+        <HintPath>..\..\插件项目Code\libs插件依赖\StableNameDotNet.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.2D.Animation.Runtime">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.2D.Animation.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.2D.Common.Runtime">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.2D.Common.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.2D.SpriteShape.Runtime">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.2D.SpriteShape.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.2D.Tilemap.Extras">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.2D.Tilemap.Extras.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.Burst.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst.Unsafe">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.Burst.Unsafe.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Collections">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.Collections.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Collections.LowLevel.ILSupport">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.InternalAPIEngineBridge.001">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.InternalAPIEngineBridge.001.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Mathematics">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.Mathematics.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipelines.Core.Runtime">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.TextMeshPro">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.TextMeshPro.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.VisualScripting.Core">
+        <HintPath>..\..\插件项目Code\libs插件依赖\Unity.VisualScripting.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AccessibilityModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.AccessibilityModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AIModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.AIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AndroidJNIModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.AndroidJNIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AnimationModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.AnimationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AssetBundleModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.AssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AudioModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.AudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClothModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ClothModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterInputModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ClusterInputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterRendererModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ClusterRendererModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ContentLoadModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ContentLoadModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CrashReportingModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.CrashReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DirectorModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.DirectorModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DSPGraphModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.DSPGraphModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GameCenterModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.GameCenterModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GIModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.GIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GridModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.GridModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.HotReloadModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.HotReloadModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ImageConversionModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ImageConversionModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.InputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.JSONSerializeModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.JSONSerializeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.LocalizationModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.LocalizationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ParticleSystemModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ParticleSystemModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PerformanceReportingModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Physics2DModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.Physics2DModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PhysicsModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.PhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ProfilerModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ProfilerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PropertiesModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.PropertiesModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ScreenCaptureModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SharedInternalsModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.SharedInternalsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteMaskModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.SpriteMaskModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteShapeModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.SpriteShapeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.StreamingModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.StreamingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubstanceModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.SubstanceModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubsystemsModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.SubsystemsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.TerrainModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainPhysicsModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreFontEngineModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreTextEngineModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TilemapModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.TilemapModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TLSModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.TLSModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIElementsModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UIElementsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UmbraModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UmbraModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityConnectModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityConnectModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityCurlModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityCurlModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityTestProtocolModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VehiclesModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.VehiclesModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VFXModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.VFXModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VideoModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.VideoModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VirtualTexturingModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.VirtualTexturingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VRModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.VRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.WindModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.WindModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.XRModule">
+        <HintPath>..\..\插件项目Code\libs插件依赖\UnityEngine.XRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="WasmDisassembler">
+        <HintPath>..\..\插件项目Code\libs插件依赖\WasmDisassembler.dll</HintPath>
+      </Reference>
+      <Reference Include="__Generated">
+        <HintPath>..\..\插件项目Code\libs插件依赖\__Generated.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+  <!-- PostBuild event disabled - target path does not exist -->
+  <!--<Target Name="CopyFileAfterBuild" AfterTargets="Build">
+    <PropertyGroup>
+      <SourceFilePath>$(ProjectDir)bin\Release\net6.0\MoreShovel.BepInEx.dll</SourceFilePath>
+      <DestinationFolderPath>C:\Users\Liyuan\Desktop\pvzRHdev\BepInEx2.8.2\BepInEx\plugins</DestinationFolderPath>
+    </PropertyGroup>
+    <Exec Command="copy &quot;$(SourceFilePath)&quot; &quot;$(DestinationFolderPath)&quot; /Y" />
+  </Target>-->
+</Project>
