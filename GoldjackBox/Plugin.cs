@@ -231,7 +231,6 @@ namespace UltimateGoldJackBoxZombieMod
             foreach (ZombieDieRecord record in recodes)
             {
                 float boxXFromColumn = Mouse.Instance.GetBoxXFromColumn(record.col);
-                CreateZombie.Instance.SetZombie(record.row, record.zombieType, boxXFromColumn, false).GetComponent<Zombie>();
                 float boxYFromRow = Mouse.Instance.GetBoxYFromRow(record.row);
                 Vector3 position = new Vector3(boxXFromColumn, boxYFromRow, 0f);
                 ZombieSpawner.Instance.SpawnZombieAt(position, 0, (int)record.zombieType, false, boxXFromColumn, record.row);
