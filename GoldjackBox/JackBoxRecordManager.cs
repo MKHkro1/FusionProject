@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 
 namespace UltimateGoldJackBoxZombieMod
 {
-    public class JackBoxRecordManager
-    {
-    }
+	public class JackBoxRecordManager
+	{
+	}
 }

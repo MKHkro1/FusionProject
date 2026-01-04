@@ -1,181 +1,198 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace UltimateGoldJackBoxZombieMod
 {
-    public class ZombieRecordManager
-    {
-        private Dictionary<string, List<ZombieDieRecord>> _recordsByPosition;
-        private int _maxRecordsPerPosition;
-        private const int MAX_CAPACITY = 5000;
-        private int _currentTotalRecords;
+	public class ZombieRecordManager
+	{
+		public ZombieRecordManager(int maxRecordsPerPosition = 5)
+		{
+			this._recordsByPosition = new Dictionary<string, List<ZombieDieRecord>>();
+			this._maxRecordsPerPosition = maxRecordsPerPosition;
+			this._currentTotalRecords = 0;
+		}
 
-        public ZombieRecordManager(int maxRecordsPerPosition = 5)
-        {
-            _recordsByPosition = new Dictionary<string, List<ZombieDieRecord>>();
-            _maxRecordsPerPosition = maxRecordsPerPosition;
-            _currentTotalRecords = 0;
-        }
+		public bool AddRecord(ZombieDieRecord newRecord)
+		{
+			if (this._currentTotalRecords >= 5000)
+			{
+				return false;
+			}
+			string positionKey = this.GetPositionKey(newRecord.row, newRecord.col);
+			if (!this._recordsByPosition.ContainsKey(positionKey))
+			{
+				this._recordsByPosition[positionKey] = new List<ZombieDieRecord>();
+				this._recordsByPosition[positionKey].Add(newRecord);
+				this._currentTotalRecords++;
+				return true;
+			}
+			if (this._recordsByPosition[positionKey].Count >= this._maxRecordsPerPosition)
+			{
+				ZombieDieRecord zombieDieRecord = (from r in this._recordsByPosition[positionKey]
+				orderby r.health
+				select r).First<ZombieDieRecord>();
+				if (newRecord.health <= zombieDieRecord.health)
+				{
+					return false;
+				}
+			}
+			this._recordsByPosition[positionKey].Add(newRecord);
+			this._currentTotalRecords++;
+			this.MaintainTopRecordsForPosition(positionKey);
+			return true;
+		}
 
-        public bool AddRecord(ZombieDieRecord newRecord)
-        {
-            if (_currentTotalRecords >= MAX_CAPACITY) return false;
-            string positionKey = GetPositionKey(newRecord.row, newRecord.col);
-            if (!_recordsByPosition.ContainsKey(positionKey))
-            {
-                _recordsByPosition[positionKey] = new List<ZombieDieRecord>();
-                _recordsByPosition[positionKey].Add(newRecord);
-                _currentTotalRecords++;
-                return true;
-            }
-            if (_recordsByPosition[positionKey].Count >= _maxRecordsPerPosition)
-            {
-                ZombieDieRecord minRecord = _recordsByPosition[positionKey].OrderBy(r => r.health).First();
-                if (newRecord.health <= minRecord.health) return false;
-            }
-            _recordsByPosition[positionKey].Add(newRecord);
-            _currentTotalRecords++;
-            MaintainTopRecordsForPosition(positionKey);
-            return true;
-        }
+		public int AddRecords(IEnumerable<ZombieDieRecord> newRecords)
+		{
+			int num = 0;
+			foreach (ZombieDieRecord newRecord in newRecords)
+			{
+				if (this.AddRecord(newRecord))
+				{
+					num++;
+				}
+				if (this._currentTotalRecords >= 5000)
+				{
+					break;
+				}
+			}
+			return num;
+		}
 
-        public int AddRecords(IEnumerable<ZombieDieRecord> newRecords)
-        {
-            int num = 0;
-            foreach (ZombieDieRecord newRecord in newRecords)
-            {
-                if (AddRecord(newRecord)) num++;
-                if (_currentTotalRecords >= MAX_CAPACITY) break;
-            }
-            return num;
-        }
+		public static float GetTotalHealth(List<ZombieDieRecord> records)
+		{
+			float num = 0f;
+			foreach (ZombieDieRecord zombieDieRecord in records)
+			{
+				num += zombieDieRecord.health;
+			}
+			return num;
+		}
 
-        public static float GetTotalHealth(List<ZombieDieRecord> records)
-        {
-            float num = 0f;
-            foreach (ZombieDieRecord record in records)
-            {
-                num += record.health;
-            }
-            return num;
-        }
+		public List<ZombieDieRecord> GetTopRecordsAroundPosition(int row, int col, bool isUltimate, int count)
+		{
+			List<ZombieDieRecord> list = new List<ZombieDieRecord>();
+			int[] array = new int[] { -1, 0, 1 };
+			foreach (int num in array)
+			{
+				foreach (int num2 in array)
+				{
+					int row2 = row + num;
+					int col2 = col + num2;
+					string positionKey = this.GetPositionKey(row2, col2);
+					List<ZombieDieRecord> collection;
+					if (this._recordsByPosition.TryGetValue(positionKey, out collection))
+					{
+						list.AddRange(collection);
+					}
+				}
+			}
+			IOrderedEnumerable<ZombieDieRecord> source = from r in list
+			orderby r.health descending
+			select r;
+			List<ZombieDieRecord> list2;
+			if (!isUltimate)
+			{
+				list2 = (from r in source
+				where TypeMgr.UltimateZombie(r.zombieType)
+				group r by r.zombieType into g
+				select g.First<ZombieDieRecord>()).ToList<ZombieDieRecord>();
+			}
+			list2 = (from r in source
+			group r by r.zombieType into g
+			select g.First<ZombieDieRecord>()).ToList<ZombieDieRecord>();
+			if (list2.Count <= count)
+			{
+				return list2;
+			}
+			return list2.Take(count).ToList<ZombieDieRecord>();
+		}
 
-        public List<ZombieDieRecord> GetTopRecordsAroundPosition(int row, int col, bool isUltimate, int count)
-        {
-            List<ZombieDieRecord> list = new List<ZombieDieRecord>();
-            int[] offsets = new int[] { -1, 0, 1 };
-            foreach (int rowOffset in offsets)
-            {
-                foreach (int colOffset in offsets)
-                {
-                    int row2 = row + rowOffset;
-                    int col2 = col + colOffset;
-                    string positionKey = GetPositionKey(row2, col2);
-                    if (_recordsByPosition.TryGetValue(positionKey, out List<ZombieDieRecord>? collection))
-                    {
-                        list.AddRange(collection);
-                    }
-                }
-            }
-            var source = list.OrderByDescending(r => r.health);
-            List<ZombieDieRecord> list2;
-            if (!isUltimate)
-            {
-                // 非究极模式：只复活究极僵尸
-                list2 = source.Where(r => TypeMgr.UltimateZombie(r.zombieType))
-                    .GroupBy(r => r.zombieType)
-                    .Select(g => g.First())
-                    .ToList();
-            }
-            else
-            {
-                // 究极模式：复活所有类型僵尸（每种类型只复活一个）
-                list2 = source.GroupBy(r => r.zombieType)
-                    .Select(g => g.First())
-                    .ToList();
-            }
-            if (list2.Count <= count) return list2;
-            return list2.Take(count).ToList();
-        }
+		private void MaintainTopRecordsForPosition(string positionKey)
+		{
+			if (this._recordsByPosition.ContainsKey(positionKey))
+			{
+				List<ZombieDieRecord> list = this._recordsByPosition[positionKey];
+				if (list.Count > this._maxRecordsPerPosition)
+				{
+					List<ZombieDieRecord> list2 = (from record in list
+					orderby record.health descending
+					select record).Take(this._maxRecordsPerPosition).ToList<ZombieDieRecord>();
+					int num = list.Count - list2.Count;
+					this._recordsByPosition[positionKey] = list2;
+					this._currentTotalRecords -= num;
+				}
+			}
+		}
 
-        private void MaintainTopRecordsForPosition(string positionKey)
-        {
-            if (_recordsByPosition.ContainsKey(positionKey))
-            {
-                List<ZombieDieRecord> list = _recordsByPosition[positionKey];
-                if (list.Count > _maxRecordsPerPosition)
-                {
-                    List<ZombieDieRecord> list2 = list.OrderByDescending(record => record.health)
-                        .Take(_maxRecordsPerPosition)
-                        .ToList();
-                    int num = list.Count - list2.Count;
-                    _recordsByPosition[positionKey] = list2;
-                    _currentTotalRecords -= num;
-                }
-            }
-        }
+		public List<ZombieDieRecord> GetTopRecordsForPosition(int row, int col)
+		{
+			string positionKey = this.GetPositionKey(row, col);
+			if (this._recordsByPosition.ContainsKey(positionKey))
+			{
+				return new List<ZombieDieRecord>(this._recordsByPosition[positionKey]);
+			}
+			return new List<ZombieDieRecord>();
+		}
 
-        public List<ZombieDieRecord> GetTopRecordsForPosition(int row, int col)
-        {
-            string positionKey = GetPositionKey(row, col);
-            if (_recordsByPosition.ContainsKey(positionKey))
-            {
-                return new List<ZombieDieRecord>(_recordsByPosition[positionKey]);
-            }
-            return new List<ZombieDieRecord>();
-        }
+		public Dictionary<string, int> GetPositionStatistics()
+		{
+			Dictionary<string, int> dictionary = new Dictionary<string, int>();
+			foreach (KeyValuePair<string, List<ZombieDieRecord>> keyValuePair in this._recordsByPosition)
+			{
+				dictionary[keyValuePair.Key] = keyValuePair.Value.Count;
+			}
+			return dictionary;
+		}
 
-        public Dictionary<string, int> GetPositionStatistics()
-        {
-            Dictionary<string, int> dictionary = new Dictionary<string, int>();
-            foreach (KeyValuePair<string, List<ZombieDieRecord>> kvp in _recordsByPosition)
-            {
-                dictionary[kvp.Key] = kvp.Value.Count;
-            }
-            return dictionary;
-        }
+		private string GetPositionKey(int row, int col)
+		{
+			return $"{row}-{col}";
+		}
 
-        private string GetPositionKey(int row, int col)
-        {
-            return $"{row}-{col}";
-        }
+		public void DisplayAllRecords()
+		{
+			Console.WriteLine($"=== 各位置最大health记录 (总容量: {this._currentTotalRecords}/{5000}) ===");
+			foreach (KeyValuePair<string, List<ZombieDieRecord>> keyValuePair in from x in this._recordsByPosition
+			orderby x.Key
+			select x)
+			{
+				Console.WriteLine("位置 " + keyValuePair.Key + ":");
+				foreach (ZombieDieRecord value in keyValuePair.Value)
+				{
+					Console.WriteLine($"  {value}");
+				}
+			}
+		}
 
-        public void DisplayAllRecords()
-        {
-            Console.WriteLine($"=== 各位置最大health记录 (总容量: {_currentTotalRecords}/{MAX_CAPACITY}) ===");
-            foreach (var kvp in _recordsByPosition.OrderBy(x => x.Key))
-            {
-                Console.WriteLine($"位置 {kvp.Key}:");
-                foreach (ZombieDieRecord value in kvp.Value)
-                {
-                    Console.WriteLine($"  {value}");
-                }
-            }
-        }
+		public (int current, int max) GetCapacityInfo()
+		{
+			return (this._currentTotalRecords, 5000);
+		}
 
-        public (int current, int max) GetCapacityInfo()
-        {
-            return (_currentTotalRecords, MAX_CAPACITY);
-        }
+		public void Clear()
+		{
+			this._recordsByPosition.Clear();
+			this._currentTotalRecords = 0;
+		}
 
-        public void Clear()
-        {
-            _recordsByPosition.Clear();
-            _currentTotalRecords = 0;
-        }
+		public bool RemovePositionRecords(int row, int col)
+		{
+			string positionKey = this.GetPositionKey(row, col);
+			if (this._recordsByPosition.ContainsKey(positionKey))
+			{
+				int count = this._recordsByPosition[positionKey].Count;
+				this._recordsByPosition.Remove(positionKey);
+				this._currentTotalRecords -= count;
+				return true;
+			}
+			return false;
+		}
 
-        public bool RemovePositionRecords(int row, int col)
-        {
-            string positionKey = GetPositionKey(row, col);
-            if (_recordsByPosition.ContainsKey(positionKey))
-            {
-                int count = _recordsByPosition[positionKey].Count;
-                _recordsByPosition.Remove(positionKey);
-                _currentTotalRecords -= count;
-                return true;
-            }
-            return false;
-        }
-    }
+		private Dictionary<string, List<ZombieDieRecord>> _recordsByPosition;
+		private int _maxRecordsPerPosition;
+		private const int MAX_CAPACITY = 5000;
+		private int _currentTotalRecords;
+	}
 }
