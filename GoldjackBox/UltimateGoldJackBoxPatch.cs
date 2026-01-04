@@ -130,11 +130,7 @@ namespace UltimateGoldJackBoxZombieMod
 				{
 					if (!jumperStateRecord)
 					{
-						if (component.hasUsedNoJumperRevive)
-						{
-							Plugin.goldManager.Clear();
-							return true;
-						}
+						// 没下撑杆时可以一直复活，移除hasUsedNoJumperRevive检查
 						List<ZombieDieRecord> topRecordsAroundPosition = Plugin.zombieRecordManager.GetTopRecordsAroundPosition(__instance.theZombieRow, __instance.Column, true, 5);
 						if (topRecordsAroundPosition.Count > 0)
 						{
@@ -171,11 +167,7 @@ namespace UltimateGoldJackBoxZombieMod
 					}
 					return true;
 				}
-				if (component.hasUsedNoJumperRevive)
-				{
-					Plugin.goldManager.Clear();
-					return true;
-				}
+				// 没下撑杆时可以一直复活，移除hasUsedNoJumperRevive检查
 				Plugin.goldManager.Clear();
 				Plugin.TeleportPosition(component.zombie, 0);
 				return true;
@@ -290,8 +282,10 @@ namespace UltimateGoldJackBoxZombieMod
 				{
 					num += zombieDieRecord.health;
 				}
-				float num2 = (float)Random.Range(15000, 54001);
-				int num3 = Random.Range(2, 6);
+				// 降低下撑杆条件：血量要求从15000-54000降低到5000-20000
+				float num2 = (float)Random.Range(5000, 20001);
+				// 降低下撑杆条件：僵尸数量要求从2-6降低到1-3
+				int num3 = Random.Range(1, 4);
 				float healthInTravel = Plugin.getHealthInTravel();
 				float num4 = num2 * healthInTravel;
 				if (topRecordsAroundPosition.Count < num3 || num < num4)
