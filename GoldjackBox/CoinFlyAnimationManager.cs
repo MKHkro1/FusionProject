@@ -47,6 +47,15 @@ namespace UltimateGoldJackBoxZombieMod
 
 		public static void Clear()
 		{
+			// 销毁所有飞行中的金币对象
+			for (int i = CoinFlyAnimationManager.flyingCoins.Count - 1; i >= 0; i--)
+			{
+				CoinFlyAnimationManager.FlyingCoin flyingCoin = CoinFlyAnimationManager.flyingCoins[i];
+				if (flyingCoin.coin != null)
+				{
+					UnityEngine.Object.Destroy(flyingCoin.coin);
+				}
+			}
 			CoinFlyAnimationManager.flyingCoins.Clear();
 		}
 

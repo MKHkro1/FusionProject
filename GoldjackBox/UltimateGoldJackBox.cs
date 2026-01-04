@@ -213,6 +213,12 @@ namespace UltimateGoldJackBoxZombieMod
 		{
 		}
 
+		public void OnDestroy()
+		{
+			// 僵尸死亡时清除所有飞行中的金币动画
+			CoinFlyAnimationManager.Clear();
+		}
+
 		public void Update()
 		{
 			if (GameAPP.theGameStatus != (GameStatus)0)
