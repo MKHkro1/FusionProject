@@ -245,11 +245,13 @@ namespace UltimateGoldJackBoxZombieMod
 					{
 						int theMoney = Board.Instance.theMoney;
 						int num = Random.Range(3000, 8001);
-						if (theMoney >= num)
+						// 如果钱不够，则吸取所有剩余的钱（到0）
+						int actualDrain = (theMoney >= num) ? num : theMoney;
+						if (actualDrain > 0)
 						{
 							this.updateTime += Time.deltaTime;
-							Board.Instance.theMoney -= theMoney;
-							int i = num / 1000;
+							Board.Instance.theMoney -= actualDrain;
+							int i = actualDrain / 1000;
 							while (i > 0)
 							{
 								i--;
@@ -258,9 +260,9 @@ namespace UltimateGoldJackBoxZombieMod
 								{
 								});
 							}
-							this.UpdateCenterPercentText((float)num, false);
+							this.UpdateCenterPercentText((float)actualDrain, false);
 						}
-						this.zombie.Recover((float)(num / 10));
+						this.zombie.Recover((float)(actualDrain / 10));
 					}
 				}
 				else
